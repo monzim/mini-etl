@@ -11,8 +11,8 @@ import { JWTPayload } from 'src/types/JwtPayload';
 export class JwtStrategy extends PassportStrategy(PassportJwtStrategy) {
   constructor(configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get<string>('JWT_SECRET'),
     });
   }
@@ -47,6 +47,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     _refreshToken: string,
     profile: Profile,
   ): Promise<JWTPayload> {
+    console.log(profile);
+
     let user = await this.prisma.users.findUnique({
       where: { id: profile.id },
     });

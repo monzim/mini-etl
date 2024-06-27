@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Users {
-  id           String        @id
+  id           String        @id @unique
   email        String
   name         String?
   display_name String?
