@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           String        @id
+  email        String
+  name         String?
+  display_name String?
+  avatar       String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  providers    Providers[]
+  sessions     Sessions[]
+  datasources  DataSources[]
+}
+
+model Sessions {
+  id            String       @id @default(cuid())
+  user_id       String
+  user          Users        @relation(fields: [user_id], references: [id])
+  expiresAt     DateTime
+  provider_type ProviderType
+  provider_id   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+enum ProviderType {
+  GITHUB
+}
+
+model Providers {
+  id               String                  @id @default(cuid())
+  type             ProviderType            @default(GITHUB)
+  auth_provider_id String?
+  user_id          String
+  user             Users                   @relation(fields: [user_id], references: [id])
+  accessToken      String?
+  refreshToken     String?
+  expiresAt        DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  destinations     DataSourceConnections[]
+}
+
+model DataSourceConnections {
+  id            String      @id @default(cuid())
+  provider_id   String
+  provider      Providers   @relation(fields: [provider_id], references: [id])
+  dataSource_id String
+  dataSource    DataSources @relation(fields: [dataSource_id], references: [id])
+  lastSyncAt    DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  syncError     String?
+}
+
+enum DataSourceType {
+  POSTGRES
+  S3
+}
+
+model DataSources {
+  id                  String                  @id @default(cuid())
+  user_id             String
+  user                Users                   @relation(fields: [user_id], references: [id])
+  name                String
+  type                DataSourceType
+  pgUrl               String?
+  s3Bucket            String?
+  s3Region            String?
+  s3Key               String?
+  s3Secret            String?
+  connected           Boolean                 @default(false)
+  lastConnectionCheck DateTime?
+  setupCompleted      Boolean                 @default(false)
+  setupError          String?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  connections         DataSourceConnections[]
+}

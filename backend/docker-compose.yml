@@ -1,0 +1,27 @@
+services:
+  etl-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    volumes:
+      - etl-db:/var/lib/postgresql/data
+
+  etl-rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: monzim
+      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_MANAGEMENT: true
+    volumes:
+      - etl-mq-data:/var/lib/rabbitmq
+
+volumes:
+  etl-mq-data:
+  etl-db:
