@@ -1,12 +1,14 @@
-import { Controller, Logger } from '@nestjs/common';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { NewConnectionDto } from './dto/new-connection.dto';
 
 @Controller()
 export class AppController {
-  private readonly logger = new Logger(AppController.name);
   constructor(private readonly appService: AppService) {}
 
   @EventPattern('new_connection')
-  async handleNewConnection(@Payload() data: any, @Ctx() context: RmqContext) {}
+  async handleNewConnection(@Payload() data: NewConnectionDto) {
+    this.appService.handleNewConnection(data);
+  }
 }
