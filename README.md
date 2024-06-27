@@ -16,6 +16,9 @@ This is just a demonstration project and it can be extended to support other dat
 
 # Backend (NestJS)
 
+-- ApiGateway
+-- SyncService (Microservice)
+
 ## Stack
 
 - NestJS (Node.js Framework)

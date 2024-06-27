@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import { Profile, Strategy } from 'passport-github';
 import { ExtractJwt, Strategy as PassportJwtStrategy } from 'passport-jwt';
 import { PrismaService } from 'src/database/prisma.service';
-import { JWTPayload } from 'src/types/JwtPayload';
+import { AuthUser } from 'src/types/AuthUser';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(PassportJwtStrategy) {
@@ -46,7 +46,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     accessToken: string,
     _refreshToken: string,
     profile: Profile,
-  ): Promise<JWTPayload> {
+  ): Promise<AuthUser> {
     console.log(profile);
 
     let user = await this.prisma.users.findUnique({
@@ -88,7 +88,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         display_name: user.display_name,
         email: user.email,
         session_id: session_id,
-        sub: user.id,
+        id: user.id,
         username: user.name,
       };
     }
@@ -113,7 +113,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       display_name: user.display_name,
       email: user.email,
       session_id: session_id,
-      sub: user.id,
+      id: user.id,
       username: user.name,
     };
   }

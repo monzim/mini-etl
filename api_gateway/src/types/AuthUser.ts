@@ -1,5 +1,5 @@
-export interface JWTPayload {
-  sub: string;
+export class AuthUser {
+  id: string;
   username: string;
   avatar: string;
   email: string;
