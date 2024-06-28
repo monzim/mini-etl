@@ -59,6 +59,7 @@ model DataSourceConnections {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   syncError     String?
+  scopes        String[]
 }
 
 enum DataSourceType {

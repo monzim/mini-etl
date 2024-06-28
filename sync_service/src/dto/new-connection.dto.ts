@@ -1,4 +1,4 @@
 export class NewConnectionDto {
-  user_id: string;
-  dataSources: string;
+  userId: string;
+  connection_id: string;
 }

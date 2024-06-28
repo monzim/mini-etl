@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { SyncService } from 'src/sync/sync.service';
 import { AuthUser } from 'src/types/AuthUser';
 import { AddDataSourceDto } from './dto/add-data-source.dto';
+import { ConnectedSourceDto } from './dto/connected-source.dto';
 
 @Injectable()
 export class SourceService {
@@ -11,6 +16,63 @@ export class SourceService {
     private sync: SyncService,
     private prisma: PrismaService,
   ) {}
+
+  syncNow(user: AuthUser) {
+    this.sync.queue.emit('sync_now', {
+      user_id: user.id,
+    });
+  }
+
+  async connectToSource(user: AuthUser, payload: ConnectedSourceDto) {
+    const dataSources = await this.prisma.dataSources.findUnique({
+      where: { id: payload.data_source_id },
+    });
+
+    if (!dataSources) {
+      throw new NotFoundException('Data source not found with that ID');
+    }
+
+    if (dataSources.user_id !== user.id) {
+      throw new UnauthorizedException(
+        'You do not have access to this data source',
+      );
+    }
+
+    if (dataSources.lastConnectionCheck && dataSources.connected === false) {
+      throw new BadRequestException(
+        'Data source is not connected so cannot sync. Please check your connection.',
+      );
+    }
+
+    const provider = await this.prisma.providers.findUnique({
+      where: { id: payload.provider_id },
+    });
+
+    if (!provider) {
+      throw new NotFoundException('Provider not found with that ID');
+    }
+
+    if (provider.user_id !== user.id) {
+      throw new UnauthorizedException(
+        'You do not have access to this provider',
+      );
+    }
+
+    const join = await this.prisma.dataSourceConnections.create({
+      data: {
+        provider_id: payload.provider_id,
+        dataSource_id: payload.data_source_id,
+        scopes: payload.scopes,
+      },
+    });
+
+    this.sync.queue.emit('new_data_connection', {
+      user_id: user.id,
+      join_id: join.id,
+    });
+
+    return join;
+  }
 
   getAllDataSources(user: AuthUser) {
     return this.prisma.dataSources.findMany({
@@ -33,9 +95,9 @@ export class SourceService {
       },
     });
 
-    this.sync.queue.emit('new_connection', {
+    this.sync.queue.emit('new_data_source', {
       userId,
-      dataSources: k.id,
+      connection_id: k.id,
     });
 
     return k;

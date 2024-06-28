@@ -18,9 +18,17 @@ export class AuthController {
     return this.service.getUser(currentUser.id);
   }
 
-  @Get('callback/github')
   @UseGuards(AuthGuard('github'))
-  async authCallback(@CurrentUser() currentUser: AuthUser) {
-    return { accessToken: this.jwtService.sign(currentUser) };
+  @Get('callback/github')
+  authCallback(@CurrentUser() currentUser: AuthUser) {
+    const { id } = currentUser;
+    delete currentUser.id;
+
+    return {
+      accessToken: this.jwtService.sign({
+        sub: id,
+        ...currentUser,
+      }),
+    };
   }
 }

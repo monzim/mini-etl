@@ -9,24 +9,40 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthUser as AuthUser } from 'src/types/AuthUser';
+import { AuthUser } from 'src/types/AuthUser';
 import { CurrentUser } from './decorators/current-user.decorators';
 import { AddDataSourceDto } from './dto/add-data-source.dto';
+import { ConnectedSourceDto } from './dto/connected-source.dto';
 import { SourceService } from './source.service';
 
-@Controller('source')
+@Controller('sources')
+@UseGuards(AuthGuard('jwt'))
 export class SourceController {
   constructor(private sourceService: SourceService) {}
 
+  @Get('sync')
+  @HttpCode(HttpStatus.OK)
+  syncNow(@CurrentUser() currentUser: AuthUser) {
+    return this.sourceService.syncNow(currentUser);
+  }
+
+  @Post('connect')
+  @HttpCode(HttpStatus.CREATED)
+  connectToSource(
+    @CurrentUser() currentUser: AuthUser,
+    @Body(ValidationPipe) data: ConnectedSourceDto,
+  ) {
+    return this.sourceService.connectToSource(currentUser, data);
+  }
+
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
   getAllDataSources(@CurrentUser() currentUser: AuthUser) {
     return this.sourceService.getAllDataSources(currentUser);
   }
 
-  @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AuthGuard('jwt'))
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   addDataToSource(
     @CurrentUser() currentUser: AuthUser,
     @Body(ValidationPipe) data: AddDataSourceDto,
