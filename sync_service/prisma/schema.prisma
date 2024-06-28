@@ -23,7 +23,7 @@ model Users {
 model Sessions {
   id            String       @id @default(cuid())
   user_id       String
-  user          Users        @relation(fields: [user_id], references: [id])
+  user          Users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
   expiresAt     DateTime
   provider_type ProviderType
   provider_id   String?
@@ -40,7 +40,7 @@ model Providers {
   type             ProviderType            @default(GITHUB)
   auth_provider_id String?
   user_id          String
-  user             Users                   @relation(fields: [user_id], references: [id])
+  user             Users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   accessToken      String?
   refreshToken     String?
   expiresAt        DateTime?
@@ -52,9 +52,9 @@ model Providers {
 model DataSourceConnections {
   id            String      @id @default(cuid())
   provider_id   String
-  provider      Providers   @relation(fields: [provider_id], references: [id])
+  provider      Providers   @relation(fields: [provider_id], references: [id], onDelete: Cascade)
   dataSource_id String
-  dataSource    DataSources @relation(fields: [dataSource_id], references: [id])
+  dataSource    DataSources @relation(fields: [dataSource_id], references: [id], onDelete: Cascade)
   lastSyncAt    DateTime?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -70,7 +70,7 @@ enum DataSourceType {
 model DataSources {
   id                  String                  @id @default(cuid())
   user_id             String
-  user                Users                   @relation(fields: [user_id], references: [id])
+  user                Users                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   name                String
   type                DataSourceType
   pgUrl               String?
@@ -85,4 +85,104 @@ model DataSources {
   createdAt           DateTime                @default(now())
   updatedAt           DateTime                @updatedAt
   connections         DataSourceConnections[]
+}
+
+model Repository {
+  id                          String         @id
+  node_id                     String?
+  name                        String?
+  full_name                   String?
+  private                     Boolean?
+  description                 String?
+  fork                        Boolean?
+  url                         String?
+  created_at                  DateTime?
+  updated_at                  DateTime?
+  pushed_at                   DateTime?
+  homepage                    String?
+  size                        Int?
+  stargazers_count            Int?
+  watchers_count              Int?
+  language                    String?
+  has_issues                  Boolean?
+  has_projects                Boolean?
+  has_downloads               Boolean?
+  has_wiki                    Boolean?
+  has_pages                   Boolean?
+  has_discussions             Boolean?
+  forks_count                 Int?
+  archived                    Boolean?
+  disabled                    Boolean?
+  open_issues_count           Int?
+  license                     String?
+  allow_forking               Boolean?
+  is_template                 Boolean?
+  web_commit_signoff_required Boolean?
+  topics                      String[]
+  visibility                  String?
+  forks                       Int?
+  open_issues                 Int?
+  watchers                    Int?
+  default_branch              String?
+  pullRequests                PullRequests[]
+  issuess                     Issues[]
+}
+
+model PullRequests {
+  id                  String     @id
+  repository_id       String
+  repository          Repository @relation(fields: [repository_id], references: [id], onDelete: Cascade)
+  url                 String?
+  node_id             String?
+  number              Int?
+  state               String?
+  locked              Boolean?
+  title               String?
+  user                Json?
+  body                String?
+  created_at          DateTime?
+  updated_at          DateTime?
+  closed_at           DateTime?
+  merged_at           DateTime?
+  merge_commit_sha    String?
+  assignee            Json?
+  assignees           Json[]
+  requested_reviewers Json[]
+  requested_teams     Json[]
+  milestone           Json?
+  draft               Boolean?
+  head                Json?
+  base                Json?
+  author_association  String?
+  auto_merge          Json?
+  active_lock_reason  String?
+}
+
+model Issues {
+  id                       String     @id
+  repository_id            String
+  repository               Repository @relation(fields: [repository_id], references: [id], onDelete: Cascade)
+  url                      String?
+  node_id                  String?
+  number                   Int?
+  title                    String?
+  user                     Json?
+  labels                   Json[]
+  state                    String?
+  locked                   Boolean?
+  assignee                 Json?
+  assignees                Json[]
+  milestone                Json?
+  comments                 Int?
+  created_at               DateTime?
+  updated_at               DateTime?
+  closed_at                DateTime?
+  author_association       String?
+  active_lock_reason       String?
+  draft                    Boolean?
+  pull_request             Json?
+  body                     String?
+  reactions                Json?
+  performed_via_github_app Json?
+  state_reason             String?
 }
