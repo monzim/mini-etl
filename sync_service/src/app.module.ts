@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DataSyncModule } from './data-sync/data-sync.module';
 import { DatabaseModule } from './database/database.module';
 import { TasksService } from './tasks/tasks.service';
+import { PgSetupService } from './pg-setup/pg-setup.service';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { TasksService } from './tasks/tasks.service';
     DataSyncModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TasksService],
+  providers: [AppService, TasksService, PgSetupService],
 })
 export class AppModule {}

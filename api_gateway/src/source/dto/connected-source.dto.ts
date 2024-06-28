@@ -8,7 +8,7 @@ import {
   Length,
 } from 'class-validator';
 
-enum SourceType {
+export enum SourceType {
   PUBLIC_REPO = 'PUBLIC_REPO',
   PULL_REQUESTS = 'PULL_REQUESTS',
   ISSUES = 'ISSUES',

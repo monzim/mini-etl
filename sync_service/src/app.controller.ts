@@ -1,9 +1,10 @@
 import { Controller } from '@nestjs/common';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { ConnectedSourceDto } from './dto/connected-source.dto';
 import { NewConnectionDto } from './dto/new-connection.dto';
 import { SyncNowDto } from './dto/sync-now.dto';
+import { SyncQueryDto } from './dto/sync-query.dto';
 
 @Controller()
 export class AppController {
@@ -22,5 +23,10 @@ export class AppController {
   @EventPattern('new_data_source')
   handleNewDataSource(@Payload() data: NewConnectionDto) {
     this.appService.handleNewDataSource(data);
+  }
+
+  @MessagePattern('get_sync_data')
+  getSyncData(@Payload() data: SyncQueryDto) {
+    return this.appService.getSyncData(data);
   }
 }

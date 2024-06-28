@@ -9,6 +9,7 @@ import { SyncService } from 'src/sync/sync.service';
 import { AuthUser } from 'src/types/AuthUser';
 import { AddDataSourceDto } from './dto/add-data-source.dto';
 import { ConnectedSourceDto } from './dto/connected-source.dto';
+import { SyncQueryDto } from './dto/sync-query.dto';
 
 @Injectable()
 export class SourceService {
@@ -16,6 +17,59 @@ export class SourceService {
     private sync: SyncService,
     private prisma: PrismaService,
   ) {}
+
+  async getSyncData(
+    user: AuthUser,
+    data_source_id: string,
+    query: SyncQueryDto,
+  ) {
+    const dataConnection = await this.prisma.dataSources.findUnique({
+      where: { id: data_source_id },
+    });
+
+    if (!dataConnection) {
+      throw new NotFoundException(
+        `Data source with id ${data_source_id} not found`,
+      );
+    }
+
+    if (dataConnection.user_id !== user.id) {
+      throw new UnauthorizedException(
+        `You do not have access to this data source`,
+      );
+    }
+
+    return this.sync.queue.send('get_sync_data', {
+      data_source_id,
+      query: query.scope,
+    });
+  }
+
+  getAllConnections(user: AuthUser) {
+    return this.prisma.dataSourceConnections.findMany({
+      where: {
+        dataSource: {
+          user_id: user.id,
+        },
+      },
+      include: {
+        dataSource: {
+          select: {
+            name: true,
+            type: true,
+          },
+        },
+        provider: {
+          select: {
+            type: true,
+          },
+        },
+      },
+      orderBy: {
+        lastSyncAt: 'desc',
+      },
+    });
+  }
 
   syncNow(user: AuthUser) {
     this.sync.queue.emit('sync_now', {

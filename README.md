@@ -10,9 +10,10 @@ This is just a demonstration project and it can be extended to support other dat
 
 ## Features
 
-- Extract data from Github (Public Repositories)
+- Extract data from Github (Public Repositories, ISSUES, Pull Requests)
 - Transform the data
-- Load the data into a destination
+- Load the data into a destination (Support PostgreSQL and S3)
+- Auto Sync
 
 # Backend (NestJS)
 
@@ -23,7 +24,7 @@ This is just a demonstration project and it can be extended to support other dat
 
 - NestJS (Node.js Framework)
 - PostgreSQL (Database)
-- Drizzle (ORM)
+- PG, Prisma and Drizzle (ORM)
 - Docker (Containerization)
 - RabbitMQ (Message Broker)
 - DigitalOcean (Deployment)
