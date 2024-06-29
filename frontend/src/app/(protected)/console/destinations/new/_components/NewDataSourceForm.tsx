@@ -11,9 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Select,
   SelectContent,
@@ -21,12 +18,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ApiConfig } from "@/lib/api.config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2, Slash } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const formSchema = z
   .object({
     type: z.enum(["s3", "postgres"]),
-    name: z.string().min(1),
+    name: z.string().min(3).max(50),
     pgUri: z.string().url().optional(),
     s3Bucket: z.string().optional(),
     s3Region: z.string().optional(),
@@ -78,13 +92,50 @@ const formSchema = z
       }
     }
   });
-export default function Page() {
+
+interface Props {
+  accessToken: string | null;
+}
+
+export default function NewDataSourceForm(props: Props) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setLoading(true);
+      const res = await axios({
+        method: "post",
+        url: `${ApiConfig.BASE}/sources`,
+        headers: {
+          Authorization: `Bearer ${props.accessToken}`,
+        },
+        data: {
+          type: values.type,
+          name: values.name ?? "",
+          pgUri: values.pgUri ?? "",
+          s3Bucket: values.s3Bucket ?? "",
+          s3Region: values.s3Region ?? "",
+          s3Key: values.s3Key ?? "",
+          s3Secret: values.s3Secret ?? "",
+        },
+      });
+
+      if (res.status === 201) {
+        toast.success(
+          "Data destination created successfully. Backend will validate connection then you can use it. Redirecting to data source page..."
+        );
+
+        return router.push("/console/data-source");
+      }
+    } catch (error) {
+      toast.error("Failed to create data source. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -92,9 +143,28 @@ export default function Page() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <section>
-            <h2 className="text-lg font-semibold">
-              <Link href="/console/data-source">Data sources</Link> / New
-            </h2>
+            <h2 className="text-lg font-semibold">New Destination</h2>
+            <Breadcrumb className="mt-2 mb-4">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/console">Console</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>
+                  <Slash />
+                </BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/console/destinations">
+                    Destinations
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>
+                  <Slash />
+                </BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>New</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
             <p>
               Create a new data source. You can use this data source to create
               new datasets. You data source can be S3 or Postgres.
@@ -244,7 +314,13 @@ export default function Page() {
             </>
           )}
 
-          <Button size={"lg"} type="submit" className="w-full">
+          <Button
+            disabled={loading}
+            size={"lg"}
+            type="submit"
+            className="w-full"
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create data source
           </Button>
         </form>

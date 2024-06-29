@@ -11,22 +11,17 @@ export class AddDataSourceDto {
   type: string;
 
   @IsString()
-  @Length(3, 2000)
   pgUri: string;
 
   @IsString()
-  @Length(3, 2000)
   s3Bucket: string;
 
   @IsString()
-  @Length(3, 100)
   s3Region: string;
 
   @IsString()
-  @Length(3, 100)
   s3Key: string;
 
   @IsString()
-  @Length(3, 100)
   s3Secret: string;
 }
