@@ -15,15 +15,15 @@ export class TasksService {
   @Cron(CronExpression.EVERY_10_MINUTES)
   async autoSyncPerHour() {
     this.logger.log('Schedule sync started');
-    const users = await this.prisma.users.findMany({
-      select: {
-        id: true,
-      },
-    });
+    // const users = await this.prisma.users.findMany({
+    //   select: {
+    //     id: true,
+    //   },
+    // });
 
-    for (const user of users) {
-      this.dataSync.syncData(user.id);
-    }
+    // for (const user of users) {
+    //   this.dataSync.syncData(user.id);
+    // }
 
     this.logger.log('Schedule sync finished');
   }

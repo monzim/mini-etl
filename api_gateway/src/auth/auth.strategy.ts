@@ -47,8 +47,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     _refreshToken: string,
     profile: Profile,
   ): Promise<AuthUser> {
-    console.log(profile);
-
     let user = await this.prisma.users.findUnique({
       where: { id: profile.id },
     });

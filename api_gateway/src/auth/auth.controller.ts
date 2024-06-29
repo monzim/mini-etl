@@ -1,15 +1,17 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/source/decorators/current-user.decorators';
-import { AuthService } from './auth.service';
 import { AuthUser } from 'src/types/AuthUser';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private service: AuthService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   @Get('profile')
@@ -20,15 +22,16 @@ export class AuthController {
 
   @UseGuards(AuthGuard('github'))
   @Get('callback/github')
-  authCallback(@CurrentUser() currentUser: AuthUser) {
+  authCallback(@CurrentUser() currentUser: AuthUser, @Res() res) {
     const { id } = currentUser;
     delete currentUser.id;
 
-    return {
-      accessToken: this.jwtService.sign({
-        sub: id,
-        ...currentUser,
-      }),
-    };
+    const accessToken = this.jwtService.sign({
+      sub: id,
+      ...currentUser,
+    });
+
+    const url = this.configService.get<string>('AUTH_FRONTEND_REDIRECT_URL');
+    res.redirect(`${url}?token=${accessToken}`);
   }
 }
