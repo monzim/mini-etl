@@ -1,4 +1,4 @@
 export class SyncQueryDto {
-  data_source_id: string;
+  connection_id: string;
   query: string;
 }

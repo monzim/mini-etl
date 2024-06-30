@@ -20,27 +20,30 @@ export class SourceService {
 
   async getSyncData(
     user: AuthUser,
-    data_source_id: string,
+    connection_id: string,
     query: SyncQueryDto,
   ) {
-    const dataConnection = await this.prisma.dataSources.findUnique({
-      where: { id: data_source_id },
+    const dataConnection = await this.prisma.dataSourceConnections.findUnique({
+      where: { id: connection_id },
+      include: {
+        dataSource: true,
+      },
     });
 
     if (!dataConnection) {
       throw new NotFoundException(
-        `Data source with id ${data_source_id} not found`,
+        `Data source connection not found with ID ${connection_id}`,
       );
     }
 
-    if (dataConnection.user_id !== user.id) {
+    if (dataConnection.dataSource.user_id !== user.id) {
       throw new UnauthorizedException(
-        `You do not have access to this data source`,
+        `You do not have access to this data source connection`,
       );
     }
 
     return this.sync.queue.send('get_sync_data', {
-      data_source_id,
+      connection_id: dataConnection.id,
       query: query.scope,
     });
   }

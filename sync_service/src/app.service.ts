@@ -20,10 +20,14 @@ export class AppService {
   ) {}
 
   async getSyncData(payload: SyncQueryDto) {
-    const dataSource = await this.prisma.dataSources.findUnique({
-      where: { id: payload.data_source_id },
+    const connection = await this.prisma.dataSourceConnections.findUnique({
+      where: { id: payload.connection_id },
+      include: {
+        dataSource: true,
+      },
     });
 
+    const { dataSource, ...rest } = connection;
     if (dataSource.type === 'POSTGRES') {
       let data = [];
       const drizzle = await this.drizzleService.getDrizzle(dataSource.pgUrl);
@@ -37,6 +41,7 @@ export class AppService {
 
       return {
         payload,
+        connection: rest,
         data: data,
       };
     }

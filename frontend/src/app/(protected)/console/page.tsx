@@ -78,7 +78,7 @@ export default async function Page() {
               <TableRow key={conn.id}>
                 <TableCell className="font-medium uppercase">
                   <Link
-                    href={`/console/data-source/${conn.id}`}
+                    href={`/console/${conn.id}`}
                     className={cn(
                       buttonVariants({
                         variant: "link",
