@@ -45,6 +45,7 @@ const formSchema = z
     s3Region: z.string().optional(),
     s3Key: z.string().optional(),
     s3Secret: z.string().optional(),
+    s3Endpoint: z.string().url().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.type === "postgres") {
@@ -58,13 +59,13 @@ const formSchema = z
     }
 
     if (data.type === "s3") {
-      if (data.s3Bucket === undefined || data.s3Bucket === "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "S3 Bucket is required",
-          path: ["s3Bucket"],
-        });
-      }
+      // if (data.s3Bucket === undefined || data.s3Bucket === "") {
+      //   ctx.addIssue({
+      //     code: z.ZodIssueCode.custom,
+      //     message: "S3 Bucket is required",
+      //     path: ["s3Bucket"],
+      //   });
+      // }
 
       if (data.s3Region === undefined || data.s3Region === "") {
         ctx.addIssue({
@@ -120,6 +121,7 @@ export default function NewDataSourceForm(props: Props) {
           s3Region: values.s3Region ?? "",
           s3Key: values.s3Key ?? "",
           s3Secret: values.s3Secret ?? "",
+          s3Endpoint: values.s3Endpoint ?? "",
         },
       });
 
@@ -241,6 +243,22 @@ export default function NewDataSourceForm(props: Props) {
 
           {form.watch("type") === "s3" && (
             <>
+              <FormField
+                control={form.control}
+                name="s3Endpoint"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>S3 Endpoint</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter s3 endpoint" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      You set the s3 endpoint of the data source.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="gap-4 flex items-start">
                 <FormField
                   control={form.control}

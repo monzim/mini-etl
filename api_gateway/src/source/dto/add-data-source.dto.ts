@@ -24,4 +24,7 @@ export class AddDataSourceDto {
 
   @IsString()
   s3Secret: string;
+
+  @IsString()
+  s3Endpoint: string;
 }

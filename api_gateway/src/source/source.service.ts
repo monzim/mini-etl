@@ -148,6 +148,7 @@ export class SourceService {
         s3Region: payload.s3Region,
         s3Key: payload.s3Key,
         s3Secret: payload.s3Secret,
+        s3Endpoint: payload.s3Endpoint,
         user_id: userId,
       },
     });

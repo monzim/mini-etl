@@ -78,6 +78,7 @@ model DataSources {
   s3Region            String?
   s3Key               String?
   s3Secret            String?
+  s3Endpoint          String?
   connected           Boolean                 @default(false)
   lastConnectionCheck DateTime?
   setupCompleted      Boolean                 @default(false)

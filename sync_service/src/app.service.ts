@@ -102,6 +102,7 @@ export class AppService {
         connection.s3Key,
         connection.s3Secret,
         connection.s3Region,
+        connection.s3Endpoint,
       );
 
       isValid = k.isValid;
@@ -123,6 +124,7 @@ export class AppService {
     key: string,
     secret: string,
     region: string,
+    endpoint?: string,
   ): Promise<{
     isValid: boolean;
     error?: string;
@@ -130,6 +132,7 @@ export class AppService {
     const s3 = new S3({
       apiVersion: '2006-03-01',
       region: region,
+      endpoint: endpoint,
       credentials: {
         accessKeyId: key,
         secretAccessKey: secret,
