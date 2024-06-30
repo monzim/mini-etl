@@ -59,13 +59,13 @@ const formSchema = z
     }
 
     if (data.type === "s3") {
-      // if (data.s3Bucket === undefined || data.s3Bucket === "") {
-      //   ctx.addIssue({
-      //     code: z.ZodIssueCode.custom,
-      //     message: "S3 Bucket is required",
-      //     path: ["s3Bucket"],
-      //   });
-      // }
+      if (data.s3Bucket === undefined || data.s3Bucket === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "S3 Bucket is required",
+          path: ["s3Bucket"],
+        });
+      }
 
       if (data.s3Region === undefined || data.s3Region === "") {
         ctx.addIssue({

@@ -1,3 +1,4 @@
+import { S3 } from '@aws-sdk/client-s3';
 import { Injectable, Logger } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DrizzleService } from 'src/database/drizzle.service';
@@ -69,6 +70,31 @@ export class DataSyncService {
 
         if (prs.length > 0) {
           await this.addPullRequests(drizzle, prs);
+        }
+      } else if (conn.dataSource.type === 'S3') {
+        const s3 = new S3({
+          apiVersion: '2006-03-01',
+          region: conn.dataSource.s3Region,
+          endpoint: conn.dataSource.s3Endpoint,
+          credentials: {
+            accessKeyId: conn.dataSource.s3Key,
+            secretAccessKey: conn.dataSource.s3Secret,
+          },
+        });
+
+        const bucketName = conn.dataSource.s3Bucket;
+        const data_source_id = conn.dataSource.id;
+
+        if (repos.length > 0) {
+          await this.addRepoToS3(s3, bucketName, data_source_id, repos);
+        }
+
+        if (issues.length > 0) {
+          await this.addIssuesToS3(s3, bucketName, data_source_id, issues);
+        }
+
+        if (prs.length > 0) {
+          await this.addPullRequestsToS3(s3, bucketName, data_source_id, prs);
         }
       }
 
@@ -174,5 +200,68 @@ export class DataSyncService {
     }
 
     await Promise.all(promiseArray);
+  }
+
+  private async addRepoToS3(
+    s3: S3,
+    bucketName: string,
+    data_source_id: string,
+    repos: Repository[],
+  ) {
+    this.logger.log(`Adding ${repos.length} repos to S3`);
+    const key = `github/${data_source_id}_repositories.json`;
+    const body = JSON.stringify(repos);
+    try {
+      await s3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: body,
+        ContentType: 'application/json',
+      });
+    } catch (err) {
+      this.logger.error('Error uploading repo ', err);
+    }
+  }
+
+  private async addPullRequestsToS3(
+    s3: S3,
+    bucketName: string,
+    data_source_id: string,
+    prs: PullRequest[],
+  ) {
+    this.logger.log(`Adding ${prs.length} pull requests to S3`);
+    const key = `github/${data_source_id}_pull_requests.json`;
+    const body = JSON.stringify(prs);
+    try {
+      await s3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: body,
+        ContentType: 'application/json',
+      });
+    } catch (err) {
+      this.logger.error('Error uploading pull request ', err);
+    }
+  }
+
+  private async addIssuesToS3(
+    s3: S3,
+    bucketName: string,
+    data_source_id: string,
+    issues: Issues[],
+  ) {
+    this.logger.log(`Adding ${issues.length} issues to S3`);
+    const key = `github/${data_source_id}_issues.json`;
+    const body = JSON.stringify(issues);
+    try {
+      await s3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: body,
+        ContentType: 'application/json',
+      });
+    } catch (err) {
+      this.logger.error('Error uploading issue ', err);
+    }
   }
 }

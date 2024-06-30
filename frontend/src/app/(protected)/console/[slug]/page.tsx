@@ -28,13 +28,13 @@ interface DD {
     payload: {
       connection_id: string;
       query: string;
-    };
+    } | null;
     connection: {
       lastSyncAt: Date | null;
       scopes: string[];
       syncError: string | null;
-    };
-    data: any[];
+    } | null;
+    data: any[] | null;
   } | null;
   errorMessages: string | null;
 }
@@ -106,27 +106,29 @@ export default async function Page({
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbPage>
-                  {data.data?.connection.syncError ? "Sync Error" : "Sync Data"}
+                  {data.data?.connection?.syncError
+                    ? "Sync Error"
+                    : "Sync Data"}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </CardHeader>
         <CardContent className="space-y-1">
-          <strong>Connection ID:</strong> {data.data?.payload.connection_id}
+          <strong>Connection ID:</strong> {data.data?.payload?.connection_id}
           <div>
             <strong>Last Sync: </strong>
-            {data.data?.connection.lastSyncAt
+            {data.data?.connection?.lastSyncAt
               ? new Date(data.data?.connection.lastSyncAt).toLocaleString()
               : "Never"}
           </div>
           <div>
             <strong>Current Scope: </strong>{" "}
-            <Badge variant={"outline"}>{data.data?.payload.query}</Badge>
+            <Badge variant={"outline"}>{data.data?.payload?.query}</Badge>
           </div>
           <div>
             <strong>Availale Scopes: </strong>
-            {data.data?.connection.scopes.map((scope) => (
+            {data.data?.connection?.scopes.map((scope) => (
               <Link
                 href={`/console/${params.slug}?scope=${scope}`}
                 key={scope}
@@ -139,9 +141,13 @@ export default async function Page({
         </CardContent>
       </Card>
 
-      {scope === "PUBLIC_REPO" && <RepoTable data={repos as Repository[]} />}
-      {scope === "ISSUES" && <IssueTable data={repos as Issues[]} />}
-      {scope === "PULL_REQUESTS" && <PullTable data={repos as PullRequest[]} />}
+      {scope === "PUBLIC_REPO" && (
+        <RepoTable data={repos ?? ([] as Repository[])} />
+      )}
+      {scope === "ISSUES" && <IssueTable data={repos ?? ([] as Issues[])} />}
+      {scope === "PULL_REQUESTS" && (
+        <PullTable data={repos ?? ([] as PullRequest[])} />
+      )}
     </main>
   );
 }

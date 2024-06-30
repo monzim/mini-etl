@@ -60,6 +60,7 @@ export class AppService {
       where: { id: payload.join_id },
       include: {
         dataSource: true,
+        provider: true,
       },
     });
 
@@ -76,10 +77,18 @@ export class AppService {
     }
 
     const scopes = connection.scopes.map((scope) => scope.toString());
-    this.pgSetupService.setupPostgresSchema(
-      connection.dataSource.pgUrl,
-      scopes,
-    );
+    if (connection.dataSource.type === 'POSTGRES') {
+      this.pgSetupService.setupPostgresSchema(
+        connection.dataSource.pgUrl,
+        scopes,
+      );
+    }
+
+    if (connection.dataSource.type === 'S3') {
+      this.logger.log('S3 connection setup not implemented');
+    }
+
+    await this.dataSync.syncData(connection.provider.user_id);
   }
 
   async handleNewDataSource(payload: NewConnectionDto) {
