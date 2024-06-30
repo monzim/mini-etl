@@ -117,7 +117,7 @@ export default function NewConnectionForm(props: Props) {
             <GithubIcon className="w-8 h-8 my-2" />
             <div className="text-center">
               {form.watch("scopes")?.map((scope) => (
-                <Badge key={scope} variant={"default"}>
+                <Badge key={scope} variant={"default"} className="mr-1 mb-1">
                   {scope}
                 </Badge>
               ))}

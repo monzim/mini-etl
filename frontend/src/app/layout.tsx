@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="">
+    <html lang="en" className="dark">
       <body className={cn(inter.className)}>
         <Navbar />
         <main className="min-h-screen">{children}</main>
