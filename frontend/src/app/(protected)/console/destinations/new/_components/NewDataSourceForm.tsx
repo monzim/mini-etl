@@ -130,7 +130,7 @@ export default function NewDataSourceForm(props: Props) {
           "Data destination created successfully. Backend will validate connection then you can use it. Redirecting to data source page..."
         );
 
-        return router.push("/console/data-source");
+        return router.push("/console/destinations");
       }
     } catch (error) {
       toast.error("Failed to create data source. Please try again.");
