@@ -40,7 +40,7 @@ export default async function Page() {
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Console</h1>
           <div className="flex space-x-4">
-            <Link className={buttonVariants()} href="/console/data-source/new">
+            <Link className={buttonVariants()} href="/console/connect/new">
               Connect
             </Link>
             <Link

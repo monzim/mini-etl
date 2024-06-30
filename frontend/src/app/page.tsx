@@ -182,7 +182,7 @@ export default function Home() {
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg"
                   width="140"
                   height="70"
-                  alt="Postgres"
+                  alt="github"
                   className="aspect-[2/1] object-contain"
                 />
               </div>

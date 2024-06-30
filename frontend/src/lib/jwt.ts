@@ -30,7 +30,6 @@ export async function decodeJWT(
 export async function getDecodedJWT(
   accessToken: string | null | undefined
 ): Promise<DecodedJWT | null> {
-  console.log(accessToken);
   if (!accessToken) return null;
 
   try {
