@@ -1,5 +1,6 @@
 import { S3 } from '@aws-sdk/client-s3';
 import { Injectable, Logger } from '@nestjs/common';
+import { Readable } from 'stream';
 import { DataSyncService } from './data-sync/data-sync.service';
 import { DrizzleService } from './database/drizzle.service';
 import { PrismaService } from './database/prisma.service';
@@ -42,13 +43,87 @@ export class AppService {
       return {
         payload,
         connection: rest,
+        type: dataSource.type,
         data: data,
       };
     }
 
     if (dataSource.type === 'S3') {
-      return {};
+      const s3 = new S3({
+        apiVersion: '2006-03-01',
+        region: dataSource.s3Region,
+        endpoint: dataSource.s3Endpoint,
+        credentials: {
+          accessKeyId: dataSource.s3Key,
+          secretAccessKey: dataSource.s3Secret,
+        },
+      });
+
+      const data = await this.getS3RepositoryData(
+        s3,
+        dataSource.s3Bucket,
+        dataSource.id,
+        payload.query as 'PUBLIC_REPO' | 'ISSUES' | 'PULL_REQUESTS',
+      );
+
+      return {
+        payload,
+        connection: rest,
+        type: dataSource.type,
+        data: data,
+      };
     }
+  }
+
+  private async getS3RepositoryData(
+    s3: S3,
+    bucket: string,
+    data_source_id: string,
+    type: 'PUBLIC_REPO' | 'ISSUES' | 'PULL_REQUESTS',
+  ) {
+    const scope =
+      type === 'PUBLIC_REPO'
+        ? 'repositories'
+        : type === 'ISSUES'
+          ? 'issues'
+          : 'pull_requests';
+
+    const key = `github/${data_source_id}_${scope}.json`;
+    try {
+      const data = await s3.getObject({ Bucket: bucket, Key: key });
+      if (data.Body) {
+        const bodyContent = await this.streamToString(data.Body);
+        return JSON.parse(bodyContent);
+      } else {
+        this.logger.error('No data found in S3 object for ' + type);
+        return [];
+      }
+    } catch (err) {
+      this.logger.error('Error fetching data from S3 ' + type, err);
+      return [];
+    }
+  }
+
+  private async streamToString(stream: any): Promise<string> {
+    if (typeof stream === 'string') {
+      return stream;
+    }
+    if (Buffer.isBuffer(stream)) {
+      return stream.toString('utf-8');
+    }
+
+    if (stream instanceof Readable) {
+      return new Promise<string>((resolve, reject) => {
+        const chunks: any[] = [];
+        stream.on('data', (chunk) => chunks.push(chunk));
+        stream.on('end', () =>
+          resolve(Buffer.concat(chunks).toString('utf-8')),
+        );
+        stream.on('error', reject);
+      });
+    }
+
+    throw new Error('Unsupported stream type');
   }
 
   async handleSyncNow(payload: SyncNowDto) {

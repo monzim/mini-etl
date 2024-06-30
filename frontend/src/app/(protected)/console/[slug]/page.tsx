@@ -25,6 +25,7 @@ import SyncNowButton from "./_components/SyncNowButton";
 
 interface DD {
   data: {
+    type: string;
     payload: {
       connection_id: string;
       query: string;
@@ -108,7 +109,7 @@ export default async function Page({
                 <BreadcrumbPage>
                   {data.data?.connection?.syncError
                     ? "Sync Error"
-                    : "Sync Data"}
+                    : "Sync Data" + " - " + data.data?.type}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

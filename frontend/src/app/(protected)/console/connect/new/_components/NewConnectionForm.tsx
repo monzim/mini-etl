@@ -81,6 +81,11 @@ export default function NewConnectionForm(props: Props) {
         return router.push("/console");
       }
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 400) {
+          return toast.error(error.response.data.message);
+        }
+      }
       toast.error("Failed to connect the data source. Please try again.");
     } finally {
       setLoading(false);

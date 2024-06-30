@@ -83,21 +83,34 @@ export class SourceService {
   async connectToSource(user: AuthUser, payload: ConnectedSourceDto) {
     const dataSources = await this.prisma.dataSources.findUnique({
       where: { id: payload.data_source_id },
+      include: {
+        connections: true,
+      },
     });
 
     if (!dataSources) {
-      throw new NotFoundException('Data source not found with that ID');
+      throw new NotFoundException('Destination not found with that ID');
     }
 
     if (dataSources.user_id !== user.id) {
       throw new UnauthorizedException(
-        'You do not have access to this data source',
+        'You do not have access to this data destination',
       );
     }
 
     if (dataSources.lastConnectionCheck && dataSources.connected === false) {
       throw new BadRequestException(
-        'Data source is not connected so cannot sync. Please check your connection.',
+        'Destination is not connected so cannot sync. Please check your connection.',
+      );
+    }
+
+    const existingConnection = dataSources.connections.find(
+      (c) => c.provider_id === payload.provider_id,
+    );
+
+    if (existingConnection) {
+      throw new BadRequestException(
+        'Destination is already connected with this provider. Please use a different data destination.',
       );
     }
 

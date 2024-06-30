@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { cn } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import { Quicksand } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const quickSand = Quicksand({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Mini-ETL",
@@ -21,11 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={cn(inter.className)}>
+      <body className={cn(quickSand.className)}>
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            classNames: {
+              error: "bg-destructive",
+            },
+          }}
+        />
       </body>
     </html>
   );

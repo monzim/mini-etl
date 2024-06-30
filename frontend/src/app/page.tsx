@@ -19,7 +19,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-bold capitalize">
                   Sync data from anywhere to your database
                 </h1>
-                <p className="text-lg md:text-xl">
+                <p className="leading-7 [&:not(:first-child)]:mt-6">
                   Mini-ETL is a scalable system that automatically syncs data
                   from third-party solutions to your Postgres database and S3
                   storage.
