@@ -12,7 +12,7 @@ export class TasksService {
     private readonly prisma: PrismaService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async autoSyncPerHour() {
     this.logger.log('Schedule sync started');
     const users = await this.prisma.users.findMany({

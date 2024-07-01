@@ -64,7 +64,8 @@ export default async function Page() {
         </div>
         <p className="text-muted-foreground mt-5">
           Here all the data sources where you want to save your sync data. You
-          can click on the data source to see all the data and sync it.
+          can click on the data source to see all the data and sync it. (Sync
+          happens every 30 minutes)
         </p>
       </section>
 
