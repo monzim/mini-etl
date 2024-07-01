@@ -214,8 +214,8 @@ export default function NewDataSourceForm(props: Props) {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  You set the type of the data source. This can't be changed
-                  later.
+                  You set the type of the data source. This can&apos;t be
+                  changed later.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
