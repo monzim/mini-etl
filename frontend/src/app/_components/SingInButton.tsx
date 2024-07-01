@@ -1,5 +1,6 @@
 import { GithubIcon } from "@/components/Icons";
 import { buttonVariants } from "@/components/ui/button";
+import { ApiConfig } from "@/lib/api.config";
 import getUserJWT from "@/lib/user_jwt";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -22,7 +23,7 @@ export default async function GithubSignInButton() {
 
   return (
     <Link
-      href="http://localhost:3000/api/auth/callback/github"
+      href={ApiConfig.BASE + "/auth/callback/github"}
       className={cn(buttonVariants(), "gap-2")}
     >
       <GithubIcon className="h-5 w-5" />

@@ -21,12 +21,23 @@ export default async function Navbar() {
           Mini-ETL
         </Link>
         <nav className="hidden md:flex items-center gap-6">
+          <a
+            href="https://github.com/monzim/mini-etl"
+            className={cn(
+              buttonVariants({
+                variant: "link",
+                size: "sm",
+              })
+            )}
+          >
+            Source Code
+          </a>
           <Link
-            href="/"
+            href="/stack"
             className={cn(buttonVariants({ variant: "link" }))}
             prefetch={false}
           >
-            Features
+            Stack
           </Link>
 
           {!isAuthenticated && <GithubSignInButton />}

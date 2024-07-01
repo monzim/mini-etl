@@ -28,7 +28,7 @@ export default function Home() {
               </div>
               <div className="hidden md:block">
                 <img
-                  src="https://picsum.photos/200"
+                  src="https://github.com/monzim/public-assets/blob/main/mini-etl/stack-overview.png?raw=true"
                   width="600"
                   height="400"
                   alt="Hero"
@@ -60,7 +60,7 @@ export default function Home() {
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <img
-                src="/placeholder.svg"
+                src="https://github.com/monzim/public-assets/blob/main/mini-etl/stack-overview.png?raw=true"
                 width="550"
                 height="310"
                 alt="Image"
