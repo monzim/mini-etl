@@ -10,7 +10,7 @@ export default function Page() {
             Tech Stack
           </h2>
           <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            I use the latest technologies to build Mini-ETL. Here's a
+            I use the latest technologies to build Mini-ETL. Here&apos;s a
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function Page() {
               Stack Overview
             </h2>
             <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Here's an overview of the Mini-ETL stack.
+              Here&apos;s an overview of the Mini-ETL stack.
             </p>
           </div>
 
@@ -97,7 +97,7 @@ export default function Page() {
               App Workflow
             </h2>
             <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Here's how Mini-ETL works.
+              Here&apos;s how Mini-ETL works.
             </p>
           </div>
           <div className="flex justify-center mt-8">
