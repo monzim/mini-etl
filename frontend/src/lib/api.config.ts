@@ -1,3 +1,3 @@
 export const ApiConfig = {
-  BASE: "http://localhost:3000/api",
+  BASE: process.env.NEXT_PUBLIC_API_URL,
 };
