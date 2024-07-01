@@ -1,0 +1,7 @@
+services:
+  minetl-sync-service:
+    image: ghcr.io/monzim/min-etl-sync-service:latest
+    environment:
+      DATABASE_URL: ""
+      RABBITMQ_QUEUE: "sync_queue"
+      RABBITMQ_URL: "amqp://"

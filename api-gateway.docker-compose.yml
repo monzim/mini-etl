@@ -1,0 +1,15 @@
+services:
+  minetl-apigateway:
+    image: ghcr.io/monzim/mini-etl-api-gateway:latest
+    ports:
+      - 80:3000
+    environment:
+      DATABASE_URL: "postgresql://"
+      GITHUB_CALLBACK_URL: "http://localhost:3000/api/auth/callback/github"
+      GITHUB_CLIENT_ID: ""
+      GITHUB_CLIENT_SECRET: ""
+      JWT_SECRET: ""
+      RABBITMQ_QUEUE: "sync_queue"
+      RABBITMQ_URL: "amqp://"
+      AUTH_FRONTEND_REDIRECT_URL: "http://localhost:3311/api/auth/callback"
+      FRONTEND_URL: "http://localhost:3311"
