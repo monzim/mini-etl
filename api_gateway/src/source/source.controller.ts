@@ -12,14 +12,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { LoggingInterceptor } from 'src/logging.interceptor';
+import { TimeoutInterceptor } from 'src/sync/timeout.interceptor';
 import { AuthUser } from 'src/types/AuthUser';
 import { CurrentUser } from './decorators/current-user.decorators';
 import { AddDataSourceDto } from './dto/add-data-source.dto';
 import { ConnectedSourceDto } from './dto/connected-source.dto';
-import { SourceService } from './source.service';
 import { SyncQueryDto } from './dto/sync-query.dto';
-import { TimeoutInterceptor } from 'src/sync/timeout.interceptor';
+import { SourceService } from './source.service';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('sources')
 @UseGuards(AuthGuard('jwt'))
 export class SourceController {
