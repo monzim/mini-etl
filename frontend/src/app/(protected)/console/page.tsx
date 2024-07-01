@@ -21,17 +21,21 @@ async function getConnectedDataSources(): Promise<Connetion[]> {
   try {
     let accessToken = getAccesstoken();
 
-    const res = await axios({
-      method: "GET",
-      url: `${ApiConfig.BASE}/sources/connect`,
+    const res = await axios.get(`${ApiConfig.BASE}/sources/connect`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        Accept: "application/json",
       },
     });
 
     const data = res.data as Connetion[];
     return data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      return [];
+    }
+
     console.error(error);
     return [];
   }
