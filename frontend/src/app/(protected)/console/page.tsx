@@ -18,18 +18,23 @@ import { format } from "date-fns";
 import Link from "next/link";
 
 async function getConnectedDataSources(): Promise<Connetion[]> {
-  let accessToken = getAccesstoken();
+  try {
+    let accessToken = getAccesstoken();
 
-  const res = await axios({
-    method: "GET",
-    url: `${ApiConfig.BASE}/sources/connect`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+    const res = await axios({
+      method: "GET",
+      url: `${ApiConfig.BASE}/sources/connect`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-  const data = res.data as Connetion[];
-  return data;
+    const data = res.data as Connetion[];
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 export default async function Page() {
