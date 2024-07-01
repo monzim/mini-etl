@@ -256,8 +256,8 @@ export default function NewConnectionForm(props: Props) {
 
                       {props.dataSources.length === 0 ? (
                         <p className="text-destructive mt-2">
-                          You don't have any data destinations yet. Please add a
-                          new data destination from the{" "}
+                          You don&apos;t have any data destinations yet. Please
+                          add a new data destination from the{" "}
                           <Link
                             href={"/console/destinations/new"}
                             className="underline text-primary"

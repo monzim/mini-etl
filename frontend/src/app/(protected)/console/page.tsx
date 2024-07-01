@@ -75,7 +75,7 @@ export default async function Page() {
           <div className="p-10 border rounded-md">
             <Frown size={64} className="text-muted-foreground mx-auto block" />
             <p className="text-muted-foreground max-w-md mt-5">
-              You don't have any connected data sources yet. Click on the
+              You don&apos;t have any connected data sources yet. Click on the
               connect button to connect a new data source.
             </p>
 
