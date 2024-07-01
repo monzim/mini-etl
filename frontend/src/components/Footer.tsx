@@ -8,6 +8,17 @@ export default function Footer() {
         <p className="text-sm">&copy; 2024 monzim.com. All rights reserved.</p>
         <nav className="flex items-center gap-4 mt-4 sm:mt-0">
           <a
+            href="https://monzim.com/contact"
+            className={cn(
+              buttonVariants({
+                variant: "link",
+                size: "sm",
+              })
+            )}
+          >
+            Contact Me
+          </a>
+          <a
             href="https://github.com/monzim/mini-etl"
             className={cn(
               buttonVariants({

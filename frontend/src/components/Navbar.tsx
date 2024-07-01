@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { DatabaseIcon } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
+import { ModeToggle } from "./Theme-Toggle";
 
 export default async function Navbar() {
   const user = await getUserJWT();
@@ -62,6 +63,8 @@ export default async function Navbar() {
               </Link>
             </>
           )}
+
+          <ModeToggle />
         </nav>
       </header>
     </>

@@ -22,6 +22,7 @@ import PullTable from "./_components/PullTable";
 import RepoTable from "./_components/RepoTable";
 import { Slash } from "lucide-react";
 import SyncNowButton from "./_components/SyncNowButton";
+import { cn } from "@/lib/utils";
 
 interface DD {
   data: {
@@ -133,7 +134,7 @@ export default async function Page({
               <Link
                 href={`/console/${params.slug}?scope=${scope}`}
                 key={scope}
-                className={buttonVariants({ variant: "link" })}
+                className={cn(buttonVariants({ variant: "outline" }), "mr-2")}
               >
                 {scope}
               </Link>

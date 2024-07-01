@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
-        <section className=" py-12 md:py-24 lg:py-32">
+        <section className=" py-12 md:py-24 lg:py-32 min-h-[80vh]">
           <div className="container px-4 md:px-6">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="space-y-4">
@@ -28,11 +28,11 @@ export default function Home() {
               </div>
               <div className="hidden md:block">
                 <img
-                  src="https://github.com/monzim/public-assets/blob/main/mini-etl/stack-overview.png?raw=true"
+                  src="https://github.com/monzim/public-assets/blob/main/mini-etl/hero-image.jpg?raw=true"
                   width="600"
                   height="400"
                   alt="Hero"
-                  className="rounded-xl"
+                  className="rounded-xl border"
                 />
               </div>
             </div>

@@ -82,16 +82,17 @@ export default async function Page() {
             {connections.map((conn) => (
               <TableRow key={conn.id}>
                 <TableCell className="font-medium uppercase">
-                  <Link
+                  <a
                     href={`/console/${conn.id}`}
                     className={cn(
                       buttonVariants({
                         variant: "link",
-                      })
+                      }),
+                      "underline"
                     )}
                   >
                     {conn.id}
-                  </Link>
+                  </a>
                 </TableCell>
                 <TableCell className="uppercase font-semibold">
                   {conn.provider.type}
