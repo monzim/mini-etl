@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Connetion } from "@/models/data-source";
 import axios from "axios";
 import { format } from "date-fns";
+import { Frown } from "lucide-react";
 import Link from "next/link";
 
 async function getConnectedDataSources(): Promise<Connetion[]> {
@@ -69,57 +70,81 @@ export default async function Page() {
         </p>
       </section>
 
-      <section className="py-10">
-        <Table className="border rounded">
-          <TableCaption>
-            Connected Data Sources ({connections.length}) for Sync
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]"></TableHead>
-              <TableHead className="w-[100px]">Provider</TableHead>
-              <TableHead>Last Sync</TableHead>
-              <TableHead>DataSource</TableHead>
-              <TableHead className="text-right">Scropes</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {connections.map((conn) => (
-              <TableRow key={conn.id}>
-                <TableCell className="font-medium uppercase">
-                  <a
-                    href={`/console/${conn.id}`}
-                    className={cn(
-                      buttonVariants({
-                        variant: "link",
-                      }),
-                      "underline"
-                    )}
-                  >
-                    {conn.id}
-                  </a>
-                </TableCell>
-                <TableCell className="uppercase font-semibold">
-                  {conn.provider.type}
-                </TableCell>
-                <TableCell>
-                  {conn.lastSyncAt
-                    ? format(new Date(conn.lastSyncAt), "yyyy-MM-dd HH:mm")
-                    : "N/A"}
-                </TableCell>
-                <TableCell>{conn.dataSource.type}</TableCell>
-                <TableCell className="text-right">
-                  {conn.scopes.map((scope) => (
-                    <Badge key={scope} className="mr-2">
-                      {scope}
-                    </Badge>
-                  ))}
-                </TableCell>
+      {connections.length === 0 ? (
+        <div className="mt-10 flex text-center w-full justify-center items-center  min-h-[50vh]">
+          <div className="p-10 border rounded-md">
+            <Frown size={64} className="text-muted-foreground mx-auto block" />
+            <p className="text-muted-foreground max-w-md mt-5">
+              You don't have any connected data sources yet. Click on the
+              connect button to connect a new data source.
+            </p>
+
+            <Link
+              href="/console/connect/new"
+              className={cn(
+                buttonVariants({
+                  variant: "default",
+                }),
+                "mt-5"
+              )}
+            >
+              Connect Data Source
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <section className="py-10">
+          <Table className="border rounded">
+            <TableCaption>
+              Connected Data Sources ({connections.length}) for Sync
+            </TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]"></TableHead>
+                <TableHead className="w-[100px]">Provider</TableHead>
+                <TableHead>Last Sync</TableHead>
+                <TableHead>DataSource</TableHead>
+                <TableHead className="text-right">Scropes</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </section>
+            </TableHeader>
+            <TableBody>
+              {connections.map((conn) => (
+                <TableRow key={conn.id}>
+                  <TableCell className="font-medium uppercase">
+                    <a
+                      href={`/console/${conn.id}`}
+                      className={cn(
+                        buttonVariants({
+                          variant: "link",
+                        }),
+                        "underline"
+                      )}
+                    >
+                      {conn.id}
+                    </a>
+                  </TableCell>
+                  <TableCell className="uppercase font-semibold">
+                    {conn.provider.type}
+                  </TableCell>
+                  <TableCell>
+                    {conn.lastSyncAt
+                      ? format(new Date(conn.lastSyncAt), "yyyy-MM-dd HH:mm")
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>{conn.dataSource.type}</TableCell>
+                  <TableCell className="text-right">
+                    {conn.scopes.map((scope) => (
+                      <Badge key={scope} className="mr-2">
+                        {scope}
+                      </Badge>
+                    ))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
+      )}
     </div>
   );
 }

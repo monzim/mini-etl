@@ -20,7 +20,6 @@ export async function middleware(request: NextRequest) {
   const jwt = await getDecodedJWT(accessToken);
 
   const loggedIn = !!jwt;
-  const nextUrl = request.nextUrl;
   const pathname = request.nextUrl.pathname;
 
   const isAuthApiRoute = pathname.startsWith(apiAuthPrefix);
@@ -36,12 +35,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!isAuthApiRoute) {
-    return NextResponse.next();
-  }
-
-  if (!loggedIn && isProtectedRoute) {
-    return Response.redirect(new URL(nextUrl));
+  if (isProtectedRoute && !loggedIn) {
+    return Response.redirect(new URL("/", request.nextUrl));
   }
 
   return NextResponse.next();

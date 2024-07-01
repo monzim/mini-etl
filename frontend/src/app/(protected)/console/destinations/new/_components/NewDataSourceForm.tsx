@@ -127,7 +127,7 @@ export default function NewDataSourceForm(props: Props) {
 
       if (res.status === 201) {
         toast.success(
-          "Data destination created successfully. Backend will validate connection then you can use it. Redirecting to data source page..."
+          "Data  Destination created successfully. Backend will validate connection then you can use it. Redirecting to destination section..."
         );
 
         return router.push("/console/destinations");

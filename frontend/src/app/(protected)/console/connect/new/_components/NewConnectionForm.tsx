@@ -75,7 +75,7 @@ export default function NewConnectionForm(props: Props) {
 
       if (res.status === 201) {
         toast.success(
-          "Connection request sent successfully. You can view the status of the connection in the data source page. Redirecting ..."
+          "Connection request sent successfully. You can view the status of the connection in the console. Redirecting..."
         );
 
         return router.push("/console");
@@ -236,7 +236,7 @@ export default function NewConnectionForm(props: Props) {
                     href={"/console/destinations"}
                     className="underline text-primary"
                   >
-                    data source page
+                    destination page
                   </Link>
                   . Here you can only choose verified data destinations that you
                   previously added.
@@ -253,31 +253,46 @@ export default function NewConnectionForm(props: Props) {
                           (required)
                         </span>
                       </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a destination" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {props.dataSources.map((source) => (
-                            <SelectItem
-                              key={source.id}
-                              value={source.id}
-                              disabled={!source.connected}
-                              className={cn(
-                                !source.connected && "text-muted-foreground"
-                              )}
-                            >
-                              {source.name} - {source.type} -{" "}
-                              {source.id.slice(-4)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+
+                      {props.dataSources.length === 0 ? (
+                        <p className="text-destructive mt-2">
+                          You don't have any data destinations yet. Please add a
+                          new data destination from the{" "}
+                          <Link
+                            href={"/console/destinations/new"}
+                            className="underline text-primary"
+                          >
+                            Here
+                          </Link>
+                          .
+                        </p>
+                      ) : (
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a destination" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {props.dataSources.map((source) => (
+                              <SelectItem
+                                key={source.id}
+                                value={source.id}
+                                disabled={!source.connected}
+                                className={cn(
+                                  !source.connected && "text-muted-foreground"
+                                )}
+                              >
+                                {source.name} - {source.type} -{" "}
+                                {source.id.slice(-4)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
 
                       <FormMessage />
                     </FormItem>
