@@ -1,13 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ApiConfig } from "@/lib/api.config";
-import getAccesstoken from "@/lib/user_access_token";
-import { Issues } from "@/models/issues";
-import { PullRequest } from "@/models/pull-request";
-import { Repository } from "@/models/repository";
-import axios from "axios";
-import Link from "next/link";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,13 +7,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import getAccesstoken from "@/lib/user_access_token";
+import { Issues } from "@/models/issues";
+import { PullRequest } from "@/models/pull-request";
+import { Repository } from "@/models/repository";
+import axios from "axios";
+import Link from "next/link";
 
+import { ServerApiConfig } from "@/lib/api.config.server";
+import { cn } from "@/lib/utils";
+import { Slash } from "lucide-react";
 import IssueTable from "./_components/IssueTable";
 import PullTable from "./_components/PullTable";
 import RepoTable from "./_components/RepoTable";
-import { Slash } from "lucide-react";
 import SyncNowButton from "./_components/SyncNowButton";
-import { cn } from "@/lib/utils";
 
 interface DD {
   data: {
@@ -50,7 +50,7 @@ async function getSyncData(
   try {
     const res = await axios({
       method: "GET",
-      url: `${ApiConfig.BASE}/sources/` + id + `?scope=${scope}`,
+      url: `${ServerApiConfig.BASE}/sources/` + id + `?scope=${scope}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -81,10 +81,37 @@ export default async function Page({
   const scope = searchParams?.scope ?? "PUBLIC_REPO";
 
   if (!allowedScopes.includes(scope)) {
-    return <p>Invalid scope</p>;
+    return (
+      <>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-center text-destructive">
+            <h1 className="text-4xl font-bold">Invalid Scope</h1>
+            <p className="text-lg mt-4">
+              The scope you are trying to access is invalid. Please only use
+              these scopes: <code>PUBLIC_REPO</code>, <code>ISSUES</code>,{" "}
+              <code>PULL_REQUESTS</code>
+            </p>
+          </div>
+        </div>
+      </>
+    );
   }
 
   const data = await getSyncData(params.slug, scope);
+
+  if (data.errorMessages) {
+    return (
+      <>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-center text-destructive">
+            <h1 className="text-4xl font-bold">Error</h1>
+            <p className="text-lg mt-4">{data.errorMessages}</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   const repos = data.data?.data;
 
   const accessToken = getAccesstoken();

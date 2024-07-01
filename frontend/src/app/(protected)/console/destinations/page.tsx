@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ApiConfig } from "@/lib/api.config";
+import { ServerApiConfig } from "@/lib/api.config.server";
 import getAccesstoken from "@/lib/user_access_token";
 import { cn } from "@/lib/utils";
 import { DataSource } from "@/models/data-source";
@@ -23,7 +23,7 @@ async function getDataSources(): Promise<DataSource[]> {
 
     const res = await axios({
       method: "GET",
-      url: `${ApiConfig.BASE}/sources`,
+      url: `${ServerApiConfig.BASE}/sources`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

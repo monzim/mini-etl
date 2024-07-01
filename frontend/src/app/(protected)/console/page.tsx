@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ApiConfig } from "@/lib/api.config";
+import { ServerApiConfig } from "@/lib/api.config.server";
 import getAccesstoken from "@/lib/user_access_token";
 import { cn } from "@/lib/utils";
 import { Connetion } from "@/models/data-source";
@@ -21,7 +21,7 @@ async function getConnectedDataSources(): Promise<Connetion[]> {
   try {
     let accessToken = getAccesstoken();
 
-    const res = await axios.get(`${ApiConfig.BASE}/sources/connect`, {
+    const res = await axios.get(`${ServerApiConfig.BASE}/sources/connect`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         Accept: "application/json",

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Slash } from "lucide-react";
 
-import { ApiConfig } from "@/lib/api.config";
+import { ServerApiConfig } from "@/lib/api.config.server";
 import getAccesstoken from "@/lib/user_access_token";
 import getUserJWT from "@/lib/user_jwt";
 import { DataSource } from "@/models/data-source";
@@ -21,7 +21,7 @@ async function getDataSources(): Promise<DataSource[]> {
 
     const res = await axios({
       method: "GET",
-      url: `${ApiConfig.BASE}/sources`,
+      url: `${ServerApiConfig.BASE}/sources`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
