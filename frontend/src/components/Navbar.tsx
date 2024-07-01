@@ -5,6 +5,7 @@ import { DatabaseIcon } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { ModeToggle } from "./Theme-Toggle";
+import { siteConfig } from "@/lib/site-config";
 
 export default async function Navbar() {
   const user = await getUserJWT();
@@ -19,7 +20,7 @@ export default async function Navbar() {
           prefetch={false}
         >
           <DatabaseIcon className="h-6 w-6" />
-          Mini-ETL
+          {siteConfig.name}
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           <a

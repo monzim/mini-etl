@@ -6,13 +6,18 @@ import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/Provider";
+import { siteConfig } from "@/lib/site-config";
 
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mini-ETL",
-  description:
-    "This is a mini-ETL project like Fiber (YC) smaller version. It is a simple project that allows users to extract data from a source, transform it, and load it into a destination.",
+  title: siteConfig.name,
+  description: siteConfig.description,
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: siteConfig.images,
+  },
 };
 
 export default function RootLayout({
