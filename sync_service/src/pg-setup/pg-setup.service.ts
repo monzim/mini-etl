@@ -1,4 +1,3 @@
-import { S3 } from '@aws-sdk/client-s3';
 import { Injectable, Logger } from '@nestjs/common';
 import { Client } from 'pg';
 
