@@ -2,6 +2,7 @@ name: Build Sync Service
 
 on:
   push:
+    paths: ["sync_service/**"]
     branches:
       - main
 

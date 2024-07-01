@@ -2,6 +2,7 @@ name: Build API Gateway
 
 on:
   push:
+    paths: ["api_gateway/**"]
     branches:
       - main
 

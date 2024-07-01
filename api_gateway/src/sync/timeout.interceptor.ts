@@ -13,7 +13,7 @@ import { catchError, timeout } from 'rxjs/operators';
 export class TimeoutInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      timeout(2000),
+      timeout(10000),
       catchError((err) => {
         if (err instanceof TimeoutError) {
           console.error('Synchronous Service timeout:', err);
