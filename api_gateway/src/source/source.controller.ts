@@ -81,4 +81,14 @@ export class SourceController {
   ) {
     return this.sourceService.getSyncData(currentUser, id, query);
   }
+
+  @Post(':id/toggle')
+  @UseInterceptors(TimeoutInterceptor)
+  @HttpCode(HttpStatus.OK)
+  toggleSync(
+    @CurrentUser() currentUser: AuthUser,
+    @Param('id', ValidationPipe) id: string,
+  ) {
+    return this.sourceService.toggleSync(currentUser, id);
+  }
 }

@@ -18,6 +18,32 @@ export class SourceService {
     private prisma: PrismaService,
   ) {}
 
+  async toggleSync(user: AuthUser, connection_id: string) {
+    const dataConnection = await this.prisma.dataSourceConnections.findUnique({
+      where: { id: connection_id },
+      include: {
+        dataSource: true,
+      },
+    });
+
+    if (!dataConnection) {
+      throw new NotFoundException(
+        `Data source connection not found with ID ${connection_id}`,
+      );
+    }
+
+    if (dataConnection.dataSource.user_id !== user.id) {
+      throw new UnauthorizedException(
+        `You do not have access to this data source connection`,
+      );
+    }
+
+    await this.prisma.dataSourceConnections.update({
+      where: { id: connection_id },
+      data: { syncOn: !dataConnection.syncOn },
+    });
+  }
+
   async getSyncData(
     user: AuthUser,
     connection_id: string,

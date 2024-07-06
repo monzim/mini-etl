@@ -27,6 +27,7 @@ export class DataSyncService {
     this.logger.log('Syncing data for user ' + userId);
     const connections = await this.prisma.dataSourceConnections.findMany({
       where: {
+        syncOn: true,
         dataSource: {
           connected: true,
           user_id: userId,
