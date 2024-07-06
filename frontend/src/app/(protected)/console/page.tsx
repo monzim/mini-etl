@@ -17,6 +17,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { Frown } from "lucide-react";
 import Link from "next/link";
+import ToggleSyncButton from "./_components/toggle-sync-button";
 
 async function getConnectedDataSources(): Promise<Connetion[]> {
   try {
@@ -43,6 +44,7 @@ async function getConnectedDataSources(): Promise<Connetion[]> {
 }
 
 export default async function Page() {
+  const accessToken = getAccesstoken();
   const connections = await getConnectedDataSources();
   return (
     <div className="m-10">
@@ -104,6 +106,8 @@ export default async function Page() {
                 <TableHead className="w-[100px]">Provider</TableHead>
                 <TableHead>Last Sync</TableHead>
                 <TableHead>DataSource</TableHead>
+                <TableHead>Action</TableHead>
+
                 <TableHead className="text-right">Scropes</TableHead>
               </TableRow>
             </TableHeader>
@@ -132,6 +136,13 @@ export default async function Page() {
                       : "N/A"}
                   </TableCell>
                   <TableCell>{conn.dataSource.type}</TableCell>
+                  <TableCell>
+                    <ToggleSyncButton
+                      accessToken={accessToken}
+                      connectionId={conn.id}
+                      status={conn.syncOn}
+                    />
+                  </TableCell>
                   <TableCell className="text-right">
                     {conn.scopes.map((scope) => (
                       <Badge key={scope} className="mr-2">

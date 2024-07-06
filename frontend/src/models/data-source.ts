@@ -24,6 +24,7 @@ export interface Connetion {
   createdAt: string;
   updatedAt: string;
   syncError: null;
+  syncOn: boolean;
   scopes: string[];
   dataSource: Source;
   provider: Provider;
