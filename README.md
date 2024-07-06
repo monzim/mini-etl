@@ -3,6 +3,7 @@
 **This project is inspired by [Fiber.Dev](https://fiber.dev)**
 
 Live: [mini-etl.vercel.app](https://mini-etl.vercel.app)
+GitHub: [mini-etl](https://github.com/monzim/mini-etl)
 
 ## Introduction
 
