@@ -27,6 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="">
+      <header>
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="f904d246-7f3b-4abc-96ab-0c9338660e01"
+        ></script>
+      </header>
       <body className={cn(quickSand.className)}>
         <ThemeProvider
           attribute="class"
