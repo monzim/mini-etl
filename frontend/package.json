@@ -21,7 +21,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@tanstack/react-table": "^8.17.3",
-    "axios": "^1.7.2",
+    "axios": "^1.13.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
