@@ -30,7 +30,7 @@
     "@prisma/client": "^5.16.1",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
-    "axios": "^1.7.2",
+    "axios": "^1.13.5",
     "drizzle-orm": "^0.31.2",
     "pg": "^8.12.0",
     "postgres": "^3.4.4",
